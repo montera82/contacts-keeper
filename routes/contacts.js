@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-
+const auth = require('../middleware/auth')
 
 // @route 	GET api/contacts
 // @access 	Private
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
 	res.send('Gets all contacts');
 })
 
