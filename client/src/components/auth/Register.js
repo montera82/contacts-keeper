@@ -1,9 +1,11 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AlertContext from "../../context/alert/alertContext";
+import AuthContext from "../../context/auth/authContext";
 
-const RegisterUser = () => {
+const RegisterUser = props => {
 
 	const alertContext = useContext(AlertContext);
+	const authContext = useContext(AuthContext);
 
 	const [user, setUser] = useState({
 		name: '',
@@ -14,10 +16,24 @@ const RegisterUser = () => {
 
 	const {name, email, password, password2} = user;
 	const {setAlert} = alertContext;
+	const {registerUser, error, clearErrors, isAuthenticated} = authContext;
 
 	const onChange = (e) => {
 		setUser({...user, [e.target.name]: e.target.value})
-	}
+	};
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			props.history.push('/')
+		}
+
+		if (error) {
+			setAlert(error, 'danger');
+			clearErrors()
+		}
+
+		//eslint-disable-next-line
+	}, [error, isAuthenticated, props.history]);
 
 	const onSubmit = e => {
 		e.preventDefault();
@@ -26,8 +42,7 @@ const RegisterUser = () => {
 		} else if (password !== password2) {
 			setAlert('Passwords do not match', 'danger');
 		} else {
-
-			console.log('registered user')
+			registerUser(user);
 		}
 	}
 
@@ -54,7 +69,8 @@ const RegisterUser = () => {
 
 				<div className="form-group">
 					<label htmlFor="password2">Confirm Password</label>
-					<input type="password" name="password2" minLength={6} value={password2} onChange={onChange} required/>
+					<input type="password" name="password2" minLength={6} value={password2} onChange={onChange}
+						   required/>
 				</div>
 				<input type="submit" value="Register" className="btn btn-primary btn-block"/>
 			</form>
