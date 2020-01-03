@@ -14,7 +14,7 @@ import setTokenGlobally from './utils/setTokenGlobal';
 import PrivateRoute from "./components/routing/PrivateRoute";
 
 if (localStorage.getItem('token')) {
-	setTokenGlobally();
+	setTokenGlobally(localStorage.getItem('token'));
 }
 
 const App = () => {
