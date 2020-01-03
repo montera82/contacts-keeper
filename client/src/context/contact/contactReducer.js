@@ -25,7 +25,7 @@ export default (state, action) => {
 		case UPDATE_CONTACT:
 			return {
 				...state,
-				contacts: state.contacts.map(c => c.id === action.payload.id ? action.payload : c),
+				contacts: state.contacts.map(c => c._id === action.payload._id ? action.payload : c),
 				loading: false,
 			}
 		case CLEAR_CURRENT:
