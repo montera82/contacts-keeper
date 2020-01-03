@@ -1,9 +1,9 @@
 import {
-	ADD_CONTACT,
+	ADD_CONTACT, CLEAR_CONTACTS,
 	CLEAR_CURRENT,
 	CLEAR_FILTER, CONTACT_ERROR,
 	DELETE_CONTACT,
-	FILTER_CONTACTS,
+	FILTER_CONTACTS, GET_CONTACTS,
 	SET_CURRENT,
 	UPDATE_CONTACT
 } from "../types";
@@ -14,6 +14,7 @@ export default (state, action) => {
 			return {
 				...state,
 				contacts: [action.payload, ...state.contacts],
+				loading: false,
 			}
 
 		case SET_CURRENT:
@@ -24,7 +25,8 @@ export default (state, action) => {
 		case UPDATE_CONTACT:
 			return {
 				...state,
-				contacts: state.contacts.map(c => c.id === action.payload.id ? action.payload : c)
+				contacts: state.contacts.map(c => c.id === action.payload.id ? action.payload : c),
+				loading: false,
 			}
 		case CLEAR_CURRENT:
 			return {
@@ -37,7 +39,8 @@ export default (state, action) => {
 				filtered: state.contacts.filter(contact => {
 					const regex = new RegExp(`${action.payload}`, 'gi');
 					return contact.name.match(regex) || contact.email.match(regex);
-				})
+				}),
+				loading: false,
 			}
 		case CLEAR_FILTER:
 			return {
@@ -47,13 +50,28 @@ export default (state, action) => {
 		case DELETE_CONTACT:
 			return {
 				...state,
-				contacts: state.contacts.filter(c => c.id !== action.payload)
+				contacts: state.contacts.filter(c => c.id !== action.payload),
+				loading: false,
 			}
 		case CONTACT_ERROR:
 			return {
 				...state,
 				loading: false,
 				error: action.payload
+			}
+		case GET_CONTACTS:
+			return {
+				...state,
+				contacts: action.payload,
+				loading: false,
+			}
+		case CLEAR_CONTACTS:
+			return {
+				...state,
+				contacts: null,
+				filtered: null,
+				error: null,
+				current: null,
 			}
 		default:
 			return state
